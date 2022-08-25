@@ -1,13 +1,17 @@
 # ImpersonatePrivilegeBack
 Give Me Back My Privileges! Please? --Clément Labro.  
-Bring me SeImpersonatePrivilege back for service account.  
+Bring me SeImpersonatePrivilege back for __Service Account__.  
 Use SMB Loopback technique to bring SeImpersonatePrivilege back instaed of Task Scheduler.  
 
 ## The Limition
 1: Local SMB 445 port open.  
 2: CurrentProcess Token SessionId == RawToken SessionId.  
 3: Token ElevatedType no Limited and Token Integrity >= RawToken Integrity.  
-  
+
+## Build Environment  
+Visual Studio 2022  
+__Relase x64__  
+
 ## Test with upnphost service (x64 Only)
 __User = NT AUTHORITY\LOCAL SERVICE__   
 __SessionId = 0__  
